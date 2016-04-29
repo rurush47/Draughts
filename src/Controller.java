@@ -10,13 +10,13 @@ public class Controller
 		this.view = view;
 	}
 	
-	public String getBoardString()
+	public void printBoard()
 	{
-		return model.getBoardString();
+		view.printBoard(model.getBoard());
 	}
 	
 	public void updateView()
 	{
-		view.displayBoard(model.getBoardString());
+		//view.displayBoard(model.getBoardString());
 	}
 }

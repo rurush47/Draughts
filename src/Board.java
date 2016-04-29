@@ -1,21 +1,36 @@
 
 public class Board {
-	private String board = "xd";
 	
-	public String getBoardString()
+	private Man[][] board = new Man[8][8];
+	
+	public Board()
 	{
-		return board;
+		for(int j = 0; j < board.length; j++)
+			for(int i = 0; i < board.length; i++)
+			{
+				 if(j <= 2)
+				 {
+					 if ((i + j)%2 == 0)
+					 {
+						 board[i][j] = new Man(false);
+					 }
+				 }
+				 else if (j >= 5)
+				 {
+					 if ((i + j)%2 == 0)
+					 {
+						 board[i][j] = new Man(true);
+					 }
+				 }
+				 else
+				 {
+					 board[i][j] = null;
+				 }
+			}
 	}
 	
-	public class Men
+	public Man[][] getBoard()
 	{
-		private boolean isWhite;
-		private boolean isKing;
-		
-		public Men(boolean isWhite)
-		{
-			this.isWhite = isWhite;
-			this.isKing = false;
-		}
+		return board;
 	}
 }
