@@ -7,13 +7,22 @@ public class View
 	}
 	
 	public void printBoard(Man[][] board)
-	{
+	{	
 		for(int j = 7; j >= 0; j--)
+		{
+			System.out.print(j + "  ");
 			for(int i = 0; i < board.length; i++)
 			{
 				if(board[i][j] != null)
 				{
-					System.out.print("[x]");
+					if (board[i][j].isWhite())
+					{
+						System.out.print("[o]");						
+					}
+					else
+					{
+						System.out.print("[x]");	
+					}
 				}
 				else
 				{
@@ -24,5 +33,9 @@ public class View
 					System.out.println("");
 				}
 			}
+		}
+		System.out.println("   ");
+		System.out.print("   ");
+		System.out.println("|0||1||2||3||4||5||6||7|");
 	}
 }

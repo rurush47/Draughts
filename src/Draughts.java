@@ -9,6 +9,8 @@ public class Draughts {
 		Controller controller = new Controller(model, view);
 		
 		controller.printBoard();
+		
+		
 	}
 	
 	private static Board createNewBoard()
