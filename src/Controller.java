@@ -15,6 +15,11 @@ public class Controller
 		view.printBoard(model.getBoard());
 	}
 	
+	public void moveMan(Vector2 source, Vector2 destination)
+	{
+		model.moveMan(source, destination);
+	}
+	
 	public void updateView()
 	{
 		//view.displayBoard(model.getBoardString());

@@ -2,7 +2,7 @@
 
 public class Board {
 	
-	private int BOARDSIZE = 7;
+	public static int BOARDSIZE = 7;
 	
 	private Man[][] board = new Man[BOARDSIZE + 1][BOARDSIZE + 1];
 	
@@ -39,9 +39,17 @@ public class Board {
 	
 	public void moveMan(Vector2 source, Vector2 destination)
 	{
+		Man tmp;
+		
 		if(canManMove(source, destination))
 		{
-			
+			tmp = board[source.x][source.y];
+			board[source.x][source.y] = null;
+			board[destination.x][destination.y] = tmp;
+		}
+		else
+		{
+			System.out.println("Can't do it m8");
 		}
 	}
 	
