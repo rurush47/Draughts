@@ -1,8 +1,5 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.JFrame;
 
 
@@ -26,6 +23,7 @@ public class Draughts
         
         frame.getContentPane().setPreferredSize(
         		new Dimension((Board.BOARDSIZE + 1) * 64, (Board.BOARDSIZE + 1) * 64));
+        view.addMouseListener(controller);
         frame.getContentPane().add(view);
         frame.setLocationRelativeTo(null);
         frame.setBackground(Color.LIGHT_GRAY);
