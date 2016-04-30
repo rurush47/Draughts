@@ -8,7 +8,8 @@ import javax.swing.JPanel;
 
 public class View extends JPanel
 {
-
+	public static int IMAGESIZE = 64;
+	
 	private static final long serialVersionUID = 1L;
 	Controller controller;
 	BufferedImage whiteManImage;
@@ -39,21 +40,21 @@ public class View extends JPanel
     {
         
 		g.setColor(Color.GRAY);
-        g.fillRect(0, 0, (Board.BOARDSIZE + 1) * 64, ((Board.BOARDSIZE + 1) * 64));
+        g.fillRect(0, 0, (Board.BOARDSIZE + 1) * IMAGESIZE, ((Board.BOARDSIZE + 1) * IMAGESIZE));
         
-        for (int i = 0; i <= (Board.BOARDSIZE) * 64; i += 128)
+        for (int i = 0; i <= (Board.BOARDSIZE) * IMAGESIZE; i += 128)
         {
-        	for (int j = 0; j <= (Board.BOARDSIZE) * 64; j += 128)
+        	for (int j = 0; j <= (Board.BOARDSIZE) * IMAGESIZE; j += 128)
         	{
-        		g.clearRect(i, j, 64, 64);
+        		g.clearRect(i, j, IMAGESIZE, IMAGESIZE);
         	}
         }
         
-        for (int i = 64; i <= (Board.BOARDSIZE) * 64; i += 128)
+        for (int i = IMAGESIZE; i <= (Board.BOARDSIZE) * IMAGESIZE; i += 128)
         {
-        	for (int j = 64; j <= (Board.BOARDSIZE) * 64; j += 128)
+        	for (int j = IMAGESIZE; j <= (Board.BOARDSIZE) * IMAGESIZE; j += 128)
         	{
-        		g.clearRect(i, j, 64, 64);
+        		g.clearRect(i, j, IMAGESIZE, IMAGESIZE);
         	}
         }
         
@@ -105,11 +106,11 @@ public class View extends JPanel
 				{
 					if (board[i][7 - j].isWhite())
 					{
-						g.drawImage(whiteManImage, i*64, j*64, this);
+						g.drawImage(whiteManImage, i*IMAGESIZE, j*IMAGESIZE, this);
 					}
 					else
 					{
-						g.drawImage(blackManImage, i*64, j*64, this);	
+						g.drawImage(blackManImage, i*IMAGESIZE, j*IMAGESIZE, this);	
 					}
 				}
 			}

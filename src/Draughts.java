@@ -22,7 +22,7 @@ public class Draughts
 		JFrame frame = new JFrame();
         
         frame.getContentPane().setPreferredSize(
-        		new Dimension((Board.BOARDSIZE + 1) * 64, (Board.BOARDSIZE + 1) * 64));
+        		new Dimension((Board.BOARDSIZE + 1) * View.IMAGESIZE, (Board.BOARDSIZE + 1) * View.IMAGESIZE));
         view.addMouseListener(controller);
         frame.getContentPane().add(view);
         frame.setLocationRelativeTo(null);
