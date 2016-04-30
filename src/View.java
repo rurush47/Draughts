@@ -1,16 +1,37 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
-import javax.swing.JFrame;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 
 public class View extends JPanel
 {
-	public void displayBoard(String board)
+
+	private static final long serialVersionUID = 1L;
+	Controller controller;
+	BufferedImage whiteManImage;
+	BufferedImage blackManImage;
+	Man[][] board;
+	
+	
+	View()
 	{
-		System.out.println(board);
+		loadImages();
+	}
+	
+	private void loadImages()
+	{
+		try
+		{
+			whiteManImage = ImageIO.read(getClass().getResourceAsStream("/whiteMan.png"));
+			blackManImage = ImageIO.read(getClass().getResourceAsStream("/blackMan.png"));		
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Error loading sprite.");
+		}
 	}
 	
 	@Override 
@@ -18,26 +39,27 @@ public class View extends JPanel
     {
         
 		g.setColor(Color.GRAY);
-        g.fillRect(0, 0, (Board.BOARDSIZE + 1) * 100, ((Board.BOARDSIZE + 1) * 100));
+        g.fillRect(0, 0, (Board.BOARDSIZE + 1) * 64, ((Board.BOARDSIZE + 1) * 64));
         
-        for (int i = 0; i <= (Board.BOARDSIZE) * 100; i += 200)
+        for (int i = 0; i <= (Board.BOARDSIZE) * 64; i += 128)
         {
-        	for (int j = 100; j <= (Board.BOARDSIZE) * 100; j += 200)
+        	for (int j = 0; j <= (Board.BOARDSIZE) * 64; j += 128)
         	{
-        		g.clearRect(i, j, 100, 100);
+        		g.clearRect(i, j, 64, 64);
         	}
         }
         
-        for (int i = 100; i <= (Board.BOARDSIZE) * 100; i += 200)
+        for (int i = 64; i <= (Board.BOARDSIZE) * 64; i += 128)
         {
-        	for (int j = 0; j <= (Board.BOARDSIZE) * 100; j += 200)
+        	for (int j = 64; j <= (Board.BOARDSIZE) * 64; j += 128)
         	{
-        		g.clearRect(i, j, 100, 100);
+        		g.clearRect(i, j, 64, 64);
         	}
         }
         
         g.setColor(Color.black);
-        g.fillOval(50, 50, 25, 25);
+        
+        drawImagesOnBoard(g);
     }
 	
 	public void printBoard(Man[][] board)
@@ -72,4 +94,32 @@ public class View extends JPanel
 		System.out.print("   ");
 		System.out.println("|0||1||2||3||4||5||6||7|");
 	}
+	
+	public void drawImagesOnBoard(Graphics g)
+	{
+		for(int j = 7; j >= 0; j--)
+		{
+			for(int i = 7; i >= 0; i--)
+			{
+				if(board[i][7 - j] != null)
+				{
+					if (board[i][7 - j].isWhite())
+					{
+						g.drawImage(whiteManImage, i*64, j*64, this);
+					}
+					else
+					{
+						g.drawImage(blackManImage, i*64, j*64, this);	
+					}
+				}
+			}
+		}
+	}
+	
+	public void updateBoard(Man[][] board)
+	{
+		this.board = board;
+		repaint();
+	}
+
 }

@@ -1,16 +1,23 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JFrame;
 
 
-public class Draughts {
+public class Draughts
+{
 	public static void main(String[] args) 
 	{
 		System.out.println("Hello kurwa!");
 		
-		Board model = createNewBoard();
 		View view = new View();
+		Board model = createNewBoard();
 		Controller controller = new Controller(model, view);
+		controller.updateView();
+
+
 		
 		controller.printBoard();
 		
@@ -18,7 +25,7 @@ public class Draughts {
 		JFrame frame = new JFrame();
         
         frame.getContentPane().setPreferredSize(
-        		new Dimension((Board.BOARDSIZE + 1) * 100, (Board.BOARDSIZE + 1) * 100));
+        		new Dimension((Board.BOARDSIZE + 1) * 64, (Board.BOARDSIZE + 1) * 64));
         frame.getContentPane().add(view);
         frame.setLocationRelativeTo(null);
         frame.setBackground(Color.LIGHT_GRAY);

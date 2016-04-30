@@ -1,5 +1,4 @@
-
-public class Controller 
+public class Controller
 {
 	private Board model;
 	private View view;
@@ -20,8 +19,14 @@ public class Controller
 		model.moveMan(source, destination);
 	}
 	
+	
+	public Man[][] getBoard() 
+	{
+		return model.getBoard();
+	}
+	
 	public void updateView()
 	{
-		//view.displayBoard(model.getBoardString());
+		view.updateBoard(model.getBoard());
 	}
 }
