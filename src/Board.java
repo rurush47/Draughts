@@ -88,5 +88,17 @@ public class Board {
 			return false;
 		}
 	}
+	
+	public boolean isMan(Vector2 source)
+	{
+		if (board[source.x][source.y] != null)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 }

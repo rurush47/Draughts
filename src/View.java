@@ -119,6 +119,7 @@ public class View extends JPanel
 	public void updateBoard(Man[][] board)
 	{
 		this.board = board;
+		printBoard(board);
 		repaint();
 	}
 

@@ -4,8 +4,12 @@ import java.awt.event.MouseEvent;
 
 public class Controller extends MouseAdapter
 {
+	enum State{SELECT, MOVE};
+	
 	private Board model;
 	private View view;
+	private State state = State.SELECT;
+	private Vector2 selectedManPos;
 	
 	public Controller(Board model, View view)
 	{
@@ -40,7 +44,23 @@ public class Controller extends MouseAdapter
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(e.getX() + "," + e.getY());
+		
+		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
+		System.out.print(clickPos.x + ",");
+		System.out.println(clickPos.y);
+		if(state == State.SELECT && model.isMan(clickPos))
+		{
+			state = State.MOVE;
+			selectedManPos = clickPos;
+			return;
+		}
+		if(state == State.MOVE)
+		{
+			model.moveMan(selectedManPos, clickPos);
+			view.updateBoard(model.getBoard());
+			state = State.SELECT;
+			return;
+		}
 	}
 
 	@Override
