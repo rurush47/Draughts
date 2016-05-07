@@ -14,8 +14,9 @@ public class View extends JPanel
 	Controller controller;
 	BufferedImage whiteManImage;
 	BufferedImage blackManImage;
+	BufferedImage manSelected;
 	Man[][] board;
-	
+	JPanel view;
 
 	
 	
@@ -29,7 +30,8 @@ public class View extends JPanel
 		try
 		{
 			whiteManImage = ImageIO.read(getClass().getResourceAsStream("/whiteMan.png"));
-			blackManImage = ImageIO.read(getClass().getResourceAsStream("/blackMan.png"));		
+			blackManImage = ImageIO.read(getClass().getResourceAsStream("/blackMan.png"));	
+			manSelected = ImageIO.read(getClass().getResourceAsStream("/manSelected.png"));	
 		}
 		catch (IOException ex)
 		{
@@ -65,6 +67,32 @@ public class View extends JPanel
         drawImagesOnBoard(g);
     }
 	
+	public void drawImagesOnBoard(Graphics g)
+	{
+		for(int j = 7; j >= 0; j--)
+		{
+			for(int i = 7; i >= 0; i--)
+			{
+				if(board[i][7 - j] != null)
+				{
+					Man currentMan = board[i][7 - j];
+					if(currentMan.isSelected())
+					{
+						g.drawImage(manSelected, i*IMAGESIZE, j*IMAGESIZE, this);
+					}
+					else if (currentMan.isWhite())
+					{
+						g.drawImage(whiteManImage, i*IMAGESIZE, j*IMAGESIZE, this);
+					}
+					else
+					{
+						g.drawImage(blackManImage, i*IMAGESIZE, j*IMAGESIZE, this);	
+					}
+				}
+			}
+		}
+	}
+	
 	public void printBoard(Man[][] board)
 	{	
 		for(int j = 7; j >= 0; j--)
@@ -96,27 +124,6 @@ public class View extends JPanel
 		System.out.println("   ");
 		System.out.print("   ");
 		System.out.println("|0||1||2||3||4||5||6||7|");
-	}
-	
-	public void drawImagesOnBoard(Graphics g)
-	{
-		for(int j = 7; j >= 0; j--)
-		{
-			for(int i = 7; i >= 0; i--)
-			{
-				if(board[i][7 - j] != null)
-				{
-					if (board[i][7 - j].isWhite())
-					{
-						g.drawImage(whiteManImage, i*IMAGESIZE, j*IMAGESIZE, this);
-					}
-					else
-					{
-						g.drawImage(blackManImage, i*IMAGESIZE, j*IMAGESIZE, this);	
-					}
-				}
-			}
-		}
 	}
 	
 	public void updateBoard(Man[][] board)

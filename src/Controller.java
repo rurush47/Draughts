@@ -27,12 +27,6 @@ public class Controller extends MouseAdapter
 		model.moveMan(source, destination);
 	}
 	
-	
-	public Man[][] getBoard() 
-	{
-		return model.getBoard();
-	}
-	
 	public void updateView()
 	{
 		view.updateBoard(model.getBoard());
@@ -43,7 +37,6 @@ public class Controller extends MouseAdapter
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
 		

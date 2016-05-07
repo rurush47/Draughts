@@ -1,10 +1,12 @@
 
 
 public class Board {
-	
+	private enum Player{WHITE, BLACK};
 	public static int BOARDSIZE = 7;
-	
 	private Man[][] board = new Man[BOARDSIZE + 1][BOARDSIZE + 1];
+	private Man selected;
+	private Player currentPlayer;
+	
 	
 	public Board()
 	{
@@ -30,6 +32,7 @@ public class Board {
 					 board[i][j] = null;
 				 }
 			}
+		currentPlayer = Player.WHITE;
 	}
 	
 	public Man[][] getBoard()
@@ -43,22 +46,31 @@ public class Board {
 		
 		if(canManMove(source, destination))
 		{
+			deselectMan();
 			tmp = board[source.x][source.y];
 			board[source.x][source.y] = null;
 			board[destination.x][destination.y] = tmp;
+			nextTurn();
 		}
 		else
 		{
+			deselectMan();
 			System.out.println("Can't do it m8");
 		}
 	}
 	
 	private boolean canManMove(Vector2 source, Vector2 destination)
 	{
+		Man sourceMan = board[source.x][source.y];
+		if(!turnCheck(sourceMan))
+		{
+			return false;
+		}
+		
 		if (destination.x <= BOARDSIZE && destination.x >= 0 &&
 			destination.y <= BOARDSIZE && destination.y >= 0)
 		{
-			if (board[source.x][source.y].isWhite())
+			if (sourceMan.isWhite())
 			{
 				if((destination.x == source.x + 1 || destination.x == source.x - 1) &&
 				  (destination.y == source.y + 1))
@@ -91,7 +103,45 @@ public class Board {
 	
 	public boolean isMan(Vector2 source)
 	{
-		if (board[source.x][source.y] != null)
+		Man pointedMan = board[source.x][source.y];
+		if (pointedMan != null && turnCheck(pointedMan))
+		{
+			deselectMan();
+			pointedMan.select();
+			selected = pointedMan;
+			return true;
+		}
+		else
+		{
+			deselectMan();
+			return false;
+		}
+	}
+	
+	private void deselectMan()
+	{
+		if(selected != null)
+		{
+			selected.deselect();
+		}
+	}
+	
+	private void nextTurn()
+	{
+		if(currentPlayer == Player.WHITE)
+		{
+			currentPlayer = Player.BLACK;
+		}
+		else
+		{
+			currentPlayer = Player.WHITE;
+		}
+	}
+	
+	private boolean turnCheck(Man currentMan)
+	{
+		if(currentMan.isWhite() && currentPlayer == Player.WHITE ||
+				!currentMan.isWhite() && currentPlayer == Player.BLACK)
 		{
 			return true;
 		}
@@ -100,5 +150,4 @@ public class Board {
 			return false;
 		}
 	}
-
 }

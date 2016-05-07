@@ -1,10 +1,6 @@
-import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -40,7 +36,6 @@ public class Draughts
         frame.getContentPane().setPreferredSize(
         		new Dimension((Board.BOARDSIZE + 1) * View.IMAGESIZE, (Board.BOARDSIZE + 1) * View.IMAGESIZE));
         view.addMouseListener(controller);
-        //frame.getContentPane().add(view);
         frame.getContentPane().add(cards);
         frame.setLocationRelativeTo(null);
         frame.setBackground(Color.LIGHT_GRAY);
