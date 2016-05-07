@@ -1,6 +1,12 @@
+import java.awt.Button;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 public class Draughts
@@ -13,8 +19,18 @@ public class Draughts
 		Board model = createNewBoard();
 		Controller controller = new Controller(model, view);
 		controller.updateView();
+		JPanel cards;
 
-
+		final String MENU = "Card with Menu";
+		final String GAME = "Card with Game";
+		
+		//card view
+		cards = new JPanel(new CardLayout());
+		
+		Menu menuObj = new Menu(cards);
+		
+		cards.add(menuObj.getMenu(), MENU);
+		cards.add(view, GAME);
 		
 		controller.printBoard();
 		
@@ -24,7 +40,8 @@ public class Draughts
         frame.getContentPane().setPreferredSize(
         		new Dimension((Board.BOARDSIZE + 1) * View.IMAGESIZE, (Board.BOARDSIZE + 1) * View.IMAGESIZE));
         view.addMouseListener(controller);
-        frame.getContentPane().add(view);
+        //frame.getContentPane().add(view);
+        frame.getContentPane().add(cards);
         frame.setLocationRelativeTo(null);
         frame.setBackground(Color.LIGHT_GRAY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

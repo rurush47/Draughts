@@ -46,12 +46,15 @@ public class Controller extends MouseAdapter
 		// TODO Auto-generated method stub
 		
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
+		
 		System.out.print(clickPos.x + ",");
 		System.out.println(clickPos.y);
+		
 		if(state == State.SELECT && model.isMan(clickPos))
 		{
 			state = State.MOVE;
 			selectedManPos = clickPos;
+			view.updateBoard(model.getBoard());
 			return;
 		}
 		if(state == State.MOVE)

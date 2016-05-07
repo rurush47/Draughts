@@ -16,6 +16,8 @@ public class View extends JPanel
 	BufferedImage blackManImage;
 	Man[][] board;
 	
+
+	
 	
 	View()
 	{
