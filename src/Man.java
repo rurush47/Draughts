@@ -35,4 +35,9 @@ public class Man {
 	{
 		return selected;
 	}
+	
+	public void setKing()
+	{
+		isKing = true;
+	}
 }

@@ -14,6 +14,8 @@ public class View extends JPanel
 	Controller controller;
 	BufferedImage whiteManImage;
 	BufferedImage blackManImage;
+	BufferedImage whiteKingImage;
+	BufferedImage blackKingImage;
 	BufferedImage manSelected;
 	Man[][] board;
 	JPanel view;
@@ -32,6 +34,8 @@ public class View extends JPanel
 			whiteManImage = ImageIO.read(getClass().getResourceAsStream("/whiteMan.png"));
 			blackManImage = ImageIO.read(getClass().getResourceAsStream("/blackMan.png"));	
 			manSelected = ImageIO.read(getClass().getResourceAsStream("/manSelected.png"));	
+			blackKingImage = ImageIO.read(getClass().getResourceAsStream("/blackKing.png"));	
+			whiteKingImage = ImageIO.read(getClass().getResourceAsStream("/whiteKing.png"));	
 		}
 		catch (IOException ex)
 		{
@@ -82,11 +86,21 @@ public class View extends JPanel
 					}
 					else if (currentMan.isWhite())
 					{
-						g.drawImage(whiteManImage, i*IMAGESIZE, j*IMAGESIZE, this);
+						if(currentMan.isKing())
+						{							
+							g.drawImage(whiteKingImage, i*IMAGESIZE, j*IMAGESIZE, this);
+						}
+						else
+							g.drawImage(whiteManImage, i*IMAGESIZE, j*IMAGESIZE, this);
 					}
 					else
 					{
-						g.drawImage(blackManImage, i*IMAGESIZE, j*IMAGESIZE, this);	
+						if(currentMan.isKing())
+						{							
+							g.drawImage(blackKingImage, i*IMAGESIZE, j*IMAGESIZE, this);
+						}
+						else
+							g.drawImage(blackManImage, i*IMAGESIZE, j*IMAGESIZE, this);	
 					}
 				}
 			}
