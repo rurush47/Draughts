@@ -50,7 +50,14 @@ public class Controller extends MouseAdapter
 			view.updateBoard(model.getBoard());
 			return;
 		}
-		if(state == State.MOVE)
+		//select another your Man
+		if(state == State.MOVE && model.isMan(clickPos))
+		{
+			selectedManPos = clickPos;
+			view.updateBoard(model.getBoard());
+			return;
+		}
+		else if (state == State.MOVE)
 		{
 			model.moveMan(selectedManPos, clickPos);
 			view.updateBoard(model.getBoard());

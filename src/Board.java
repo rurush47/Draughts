@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
 	private enum Player{WHITE, BLACK};
@@ -7,9 +8,9 @@ public class Board {
 	private Man selected;
 	private Player currentPlayer;
 	
-	
 	public Board()
 	{
+		
 		for(int j = 0; j < board.length; j++)
 			for(int i = 0; i < board.length; i++)
 			{
@@ -62,43 +63,26 @@ public class Board {
 	private boolean canManMove(Vector2 source, Vector2 destination)
 	{
 		Man sourceMan = board[source.x][source.y];
+		boolean isWhite = sourceMan.isWhite();
+		
 		if(!turnCheck(sourceMan))
 		{
 			return false;
 		}
-		
-		if (destination.x <= BOARDSIZE && destination.x >= 0 &&
-			destination.y <= BOARDSIZE && destination.y >= 0)
+		if(beatCheck())
 		{
-			if (sourceMan.isWhite())
+			if(beatCheckDestination(source, destination, isWhite))
 			{
-				if((destination.x == source.x + 1 || destination.x == source.x - 1) &&
-				  (destination.y == source.y + 1))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return true;
 			}
 			else
-			{
-				if((destination.x == source.x + 1 || destination.x == source.x - 1) &&
-				  (destination.y == source.y - 1))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
+				return false;
 		}
-		else
+		if(destinationCheck(source, destination, isWhite))
 		{
-			return false;
+			return true;
 		}
+		return false;
 	}
 	
 	public boolean isMan(Vector2 source)
@@ -149,5 +133,122 @@ public class Board {
 		{
 			return false;
 		}
+	}
+	
+	private boolean destinationCheck(Vector2 source, Vector2 destination, boolean white)
+	{
+		if (destination.x <= BOARDSIZE && destination.x >= 0 &&
+				destination.y <= BOARDSIZE && destination.y >= 0)
+		{
+			if (white)
+			{
+				if((destination.x == source.x + 1 || destination.x == source.x - 1) &&
+				  (destination.y == source.y + 1) && board[destination.x][destination.y] == null)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if((destination.x == source.x + 1 || destination.x == source.x - 1) &&
+				  (destination.y == source.y - 1) && board[destination.x][destination.y] == null)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	private boolean beatCheck()
+	{
+		for(int i = 0; i <= BOARDSIZE; i++)
+		{
+			for(int j = 0; j <= BOARDSIZE; j++)
+			{
+				if(board[i][j] != null)
+				{
+					if(currentPlayer == Player.WHITE)
+					{
+						if(board[i][j].isWhite())
+						{
+							if(singleBeatCheck(new Vector2(i,j), true))
+							{
+								return true;
+							}
+						}
+					}
+					else
+					{
+						if(!board[i][j].isWhite())
+						{
+							if(singleBeatCheck(new Vector2(i,j), false))
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean singleBeatCheck(Vector2 source ,boolean white)
+	{	
+		if(source.x > 1 && source.y > 1 && source.x < BOARDSIZE - 1 && source.y < BOARDSIZE - 1)
+		{
+			for (int k = 1; k >= -1; k -= 2)
+			{
+				for (int l = 1; l >= -1; l -= 2)
+				{
+					if(board[source.x + k][source.y + l] != null)
+					{
+						if(board[source.x + k][source.y + l].isWhite() != white && 
+								board[source.x + 2*k][source.y + 2*l] == null)
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean beatCheckDestination(Vector2 source, Vector2 destination, boolean white)
+	{
+		//check all directions
+		
+		if(source.x > 1 && source.y > 1 && source.x < BOARDSIZE - 1 && source.y < BOARDSIZE - 1)
+		{
+			for (int k = 1; k >= -1; k -= 2)
+			{
+				for (int l = 1; l >= -1; l -= 2)
+				{
+					if(board[source.x + k][source.y + l] != null)
+					{
+						if(board[source.x + k][source.y + l].isWhite() != white && 
+								board[source.x + 2*k][source.y + 2*l] == null)
+						{
+							if(source.x + 2*k == destination.x && source.y + 2*l == destination.y)
+								return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 }
