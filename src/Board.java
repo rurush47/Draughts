@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.Math;
 
 public class Board {
 	private enum Player{WHITE, BLACK};
@@ -48,10 +49,24 @@ public class Board {
 		if(canManMove(source, destination))
 		{
 			deselectMan();
+			
 			tmp = board[source.x][source.y];
 			board[source.x][source.y] = null;
 			board[destination.x][destination.y] = tmp;
-			nextTurn();
+			
+			if(Math.abs(source.x - destination.x) >= 2)
+			{
+				beat(source, destination);
+				if (!singleBeatCheck(destination))
+				{
+					nextTurn();
+				}
+			}
+			else
+			{
+				nextTurn();
+			}
+			
 		}
 		else
 		{
@@ -63,7 +78,6 @@ public class Board {
 	private boolean canManMove(Vector2 source, Vector2 destination)
 	{
 		Man sourceMan = board[source.x][source.y];
-		boolean isWhite = sourceMan.isWhite();
 		
 		if(!turnCheck(sourceMan))
 		{
@@ -71,14 +85,14 @@ public class Board {
 		}
 		if(beatCheck())
 		{
-			if(beatCheckDestination(source, destination, isWhite))
+			if(beatCheckDestination(source, destination))
 			{
 				return true;
 			}
 			else
 				return false;
 		}
-		if(destinationCheck(source, destination, isWhite))
+		if(destinationCheck(source, destination))
 		{
 			return true;
 		}
@@ -135,8 +149,15 @@ public class Board {
 		}
 	}
 	
-	private boolean destinationCheck(Vector2 source, Vector2 destination, boolean white)
+	private boolean destinationCheck(Vector2 source, Vector2 destination)
 	{
+		if (board[source.x][source.y] == null)
+		{
+			return false;
+		}
+		
+		boolean white = board[source.x][source.y].isWhite();
+		
 		if (destination.x <= BOARDSIZE && destination.x >= 0 &&
 				destination.y <= BOARDSIZE && destination.y >= 0)
 		{
@@ -183,7 +204,7 @@ public class Board {
 					{
 						if(board[i][j].isWhite())
 						{
-							if(singleBeatCheck(new Vector2(i,j), true))
+							if(singleBeatCheck(new Vector2(i,j)))
 							{
 								return true;
 							}
@@ -193,7 +214,7 @@ public class Board {
 					{
 						if(!board[i][j].isWhite())
 						{
-							if(singleBeatCheck(new Vector2(i,j), false))
+							if(singleBeatCheck(new Vector2(i,j)))
 							{
 								return true;
 							}
@@ -205,13 +226,21 @@ public class Board {
 		return false;
 	}
 	
-	private boolean singleBeatCheck(Vector2 source ,boolean white)
+	private boolean singleBeatCheck(Vector2 source)
 	{	
-		if(source.x > 1 && source.y > 1 && source.x < BOARDSIZE - 1 && source.y < BOARDSIZE - 1)
+		if (board[source.x][source.y] == null)
 		{
-			for (int k = 1; k >= -1; k -= 2)
+			return false;
+		}
+		
+		boolean white = board[source.x][source.y].isWhite();
+		
+		for (int k = 1; k >= -1; k -= 2)
+		{
+			for (int l = 1; l >= -1; l -= 2)
 			{
-				for (int l = 1; l >= -1; l -= 2)
+				if (source.x + 2*k >= 0 && source.y + 2*l >= 0 &&
+						source.x + 2*k <= BOARDSIZE && source.y + 2*l <= BOARDSIZE)
 				{
 					if(board[source.x + k][source.y + l] != null)
 					{
@@ -227,15 +256,21 @@ public class Board {
 		return false;
 	}
 	
-	private boolean beatCheckDestination(Vector2 source, Vector2 destination, boolean white)
+	private boolean beatCheckDestination(Vector2 source, Vector2 destination)
 	{
-		//check all directions
-		
-		if(source.x > 1 && source.y > 1 && source.x < BOARDSIZE - 1 && source.y < BOARDSIZE - 1)
+		if (board[source.x][source.y] == null)
 		{
-			for (int k = 1; k >= -1; k -= 2)
+			return false;
+		}
+		
+		boolean white = board[source.x][source.y].isWhite();
+		
+		for (int k = 1; k >= -1; k -= 2)
+		{
+			for (int l = 1; l >= -1; l -= 2)
 			{
-				for (int l = 1; l >= -1; l -= 2)
+				if (source.x + 2*k >= 0 && source.y + 2*l >= 0 &&
+						source.x + 2*k <= BOARDSIZE && source.y + 2*l <= BOARDSIZE)
 				{
 					if(board[source.x + k][source.y + l] != null)
 					{
@@ -250,5 +285,13 @@ public class Board {
 			}
 		}
 		return false;
+	}
+	
+	private void beat(Vector2 source, Vector2 destination)
+	{
+		int x = (destination.x - source.x)/2;
+		int y = (destination.y - source.y)/2;
+		
+		board[source.x + x][source.y + y] = null;
 	}
 }
