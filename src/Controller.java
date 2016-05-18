@@ -40,8 +40,8 @@ public class Controller extends MouseAdapter
 		
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
 		
-		System.out.print(clickPos.x + ",");
-		System.out.println(clickPos.y);
+		//System.out.print(clickPos.x + ",");
+		//System.out.println(clickPos.y);
 		
 		if(state == State.SELECT && model.isMan(clickPos))
 		{

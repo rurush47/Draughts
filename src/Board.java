@@ -6,32 +6,54 @@ public class Board {
 	private Man[][] board = new Man[BOARDSIZE + 1][BOARDSIZE + 1];
 	private Man selected;
 	private Player currentPlayer;
+	private boolean beat = false;
+	private boolean doubleBeat = false;
+	private Vector2 doubleBeatPos;
+	private boolean test = false;
 	
 	public Board()
 	{
+		if (test)
+		{
+			for(int j = 0; j < board.length; j++)
+				for(int i = 0; i < board.length; i++)
+					board[i][j] = null;
+			
+			board[0][6] = new Man(false);
+			board[1][7] = new Man(false);
+			board[3][7] = new Man(false);
+			board[3][5] = new Man(false);
+			board[5][3] = new Man(false);
+			board[6][2] = new Man(true);
+			//board[2][0] = new Man(false);
+			board[6][2].setKing();
+		}
+		else
+		{
+			for(int j = 0; j < board.length; j++)
+				for(int i = 0; i < board.length; i++)
+				{
+					 if(j < ((BOARDSIZE + 1)/2 - 1))
+					 {
+						 if ((i + j)%2 == 0)
+						 {
+							 board[i][j] = new Man(true);
+						 }
+					 }
+					 else if (j > ((BOARDSIZE + 1)/2))
+					 {
+						 if ((i + j)%2 == 0)
+						 {
+							 board[i][j] = new Man(false);
+						 }
+					 }
+					 else
+					 {
+						 board[i][j] = null;
+					 }
+				}
+		}
 		
-		for(int j = 0; j < board.length; j++)
-			for(int i = 0; i < board.length; i++)
-			{
-				 if(j < ((BOARDSIZE + 1)/2 - 1))
-				 {
-					 if ((i + j)%2 == 0)
-					 {
-						 board[i][j] = new Man(true);
-					 }
-				 }
-				 else if (j > ((BOARDSIZE + 1)/2))
-				 {
-					 if ((i + j)%2 == 0)
-					 {
-						 board[i][j] = new Man(false);
-					 }
-				 }
-				 else
-				 {
-					 board[i][j] = null;
-				 }
-			}
 		currentPlayer = Player.WHITE;
 	}
 	
@@ -42,20 +64,22 @@ public class Board {
 	
 	public void moveMan(Vector2 source, Vector2 destination)
 	{
-		Man tmp;
-		
 		if(canManMove(source, destination))
 		{
 			deselectMan();
 			
-			tmp = board[source.x][source.y];
+			board[destination.x][destination.y] = board[source.x][source.y];
 			board[source.x][source.y] = null;
-			board[destination.x][destination.y] = tmp;
 			
-			if(Math.abs(source.x - destination.x) >= 2)
+			if(beat)
 			{
 				beat(source, destination);
-				if (!singleBeatCheck(destination))
+				if (doubleBeatCheck(destination))
+				{
+					doubleBeat = true;
+					doubleBeatPos = destination;
+				}
+				else
 				{
 					nextTurn();
 				}
@@ -77,7 +101,6 @@ public class Board {
 	{
 		Man sourceMan = board[source.x][source.y];
 		
-		
 		if(!turnCheck(sourceMan))
 		{
 			return false;
@@ -89,16 +112,61 @@ public class Board {
 			else
 				return false;
 		}
-		if(beatCheck() || kingBeatCheck())
+		if (doubleBeat)
+		{
+			if(!doubleBeat(source, destination))
+				return false;
+			else
+			{
+				beat = true;
+				doubleBeat = false;
+				return true;
+			}
+		}
+		else if(beatCheck())
 		{
 			if(beatCheckDestination(source, destination))
 			{
+				beat = true;
 				return true;
 			}
 			else
 				return false;
 		}
+		//if there is no Man to beat
 		if(destinationCheck(source, destination))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean kingMoveCheck(Vector2 source, Vector2 destination)
+	{
+		if (doubleBeat)
+		{
+			if(!doubleBeat(source, destination))
+				return false;
+			else
+			{
+				beat = true;
+				doubleBeat = false;
+				return true;
+			}
+		}
+		else if(beatCheck())
+		{
+			//can king move this destination during beat
+			if(kingBeatCheckDestination(source, destination))
+			{
+				beat = true;
+				return true;
+			}
+			else
+				return false;
+		}
+		//simple move if there is no beat
+		if(kingDestinationCheck(source, destination))
 		{
 			return true;
 		}
@@ -208,13 +276,17 @@ public class Board {
 				currentMan = board[i][j];
 				
 				
-				if(currentMan != null && !currentMan.isKing())
+				if(currentMan != null)
 				{
 					if(currentPlayer == Player.WHITE)
 					{
 						if(currentMan.isWhite())
 						{
-							if(singleBeatCheck(new Vector2(i,j)))
+							if(currentMan.isKing() && singleBeatKingCheck(new Vector2(i,j)))
+							{
+								return true;
+							}
+							else if(singleBeatCheck(new Vector2(i,j)))
 							{
 								return true;
 							}
@@ -224,7 +296,11 @@ public class Board {
 					{
 						if(!currentMan.isWhite())
 						{
-							if(singleBeatCheck(new Vector2(i,j)))
+							if(currentMan.isKing() && singleBeatKingCheck(new Vector2(i,j)))
+							{
+								return true;
+							}
+							else if(singleBeatCheck(new Vector2(i,j)))
 							{
 								return true;
 							}
@@ -311,6 +387,7 @@ public class Board {
 			i += k;
 			j += l;
 		}
+		beat = false;
 	}
 	
 	private void kingCheck(Vector2 destination)
@@ -331,57 +408,6 @@ public class Board {
 		}
 	}
 	
-	private boolean kingMoveCheck(Vector2 source, Vector2 destination)
-	{
-		if(kingBeatCheck() || beatCheck())
-		{
-			//can king move this destination during beat
-			if(kingBeatCheckDestination(source, destination))
-			{
-				return true;
-			}
-			else
-				return false;
-		}
-		//simple move if there is no beat
-		if(kingDestinationCheck(source, destination))
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean kingBeatCheck()
-	{
-		for(int i = 0; i <= BOARDSIZE; i++)
-		{
-			for(int j = 0; j <= BOARDSIZE; j++)
-			{
-				if(board[i][j] != null && board[i][j].isKing())
-				{
-					if(board[i][j].isWhite())
-					{
-						if(singleBeatKingCheck(new Vector2(i,j)))
-						{
-							return true;
-						}
-					}
-					else
-					{
-						if(!board[i][j].isWhite())
-						{
-							if(singleBeatKingCheck(new Vector2(i,j)))
-							{
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 	private boolean singleBeatKingCheck(Vector2 source)
 	{
 		if (board[source.x][source.y] == null)
@@ -399,6 +425,7 @@ public class Board {
 		{
 			for(int l = 1; l >= -1; l -= 2)
 			{
+				enemyManEncountered = false;
 				i += k;
 				j += l;
 				while(i >= 0 && j >= 0 && j <= BOARDSIZE && i <= BOARDSIZE)
@@ -406,7 +433,9 @@ public class Board {
 					if(board[i][j] != null)
 					{	
 						if(enemyManEncountered)
+						{
 							break;
+						}
 						if(board[i][j].isWhite() != white)
 						{
 							enemyManEncountered = true;
@@ -419,7 +448,10 @@ public class Board {
 					else
 					{
 						if(enemyManEncountered)
+						{
+ 							System.out.print("damka ma bicie");
 							return true;
+						}
 					}
 					i += k;
 					j += l;
@@ -447,13 +479,17 @@ public class Board {
 			if(board[i][j] != null)
 			{	
 				if(enemyManEncountered)
+				{
+					enemyManEncountered = false;
 					break;
+				}
 				if(board[i][j].isWhite() != white)
 				{
 					enemyManEncountered = true;
 				}
 				if(board[i][j].isWhite() == white)
 				{
+					enemyManEncountered = false;
 					break;
 				}
 			}
@@ -495,5 +531,32 @@ public class Board {
 			j += l;
 		}
 		return false;
+	}
+	
+	private boolean doubleBeat(Vector2 source, Vector2 destination)
+	{
+		if(!(source.x == doubleBeatPos.x && source.y == doubleBeatPos.y))
+			return false;
+		
+		if(board[source.x][source.y].isKing())
+		{
+			return kingBeatCheckDestination(source, destination);
+		}
+		else
+		{
+			return beatCheckDestination(source, destination);
+		}
+	}
+	
+	private boolean doubleBeatCheck(Vector2 source)
+	{
+		if(board[source.x][source.y].isKing())
+		{
+			return singleBeatKingCheck(source);
+		}
+		else
+		{
+			return singleBeatCheck(source);
+		}
 	}
 }

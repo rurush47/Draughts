@@ -109,7 +109,7 @@ public class View extends JPanel
 	
 	public void printBoard(Man[][] board)
 	{	
-		for(int j = 7; j >= 0; j--)
+		/*for(int j = 7; j >= 0; j--)
 		{
 			System.out.print(j + "  ");
 			for(int i = 0; i < board.length; i++)
@@ -137,7 +137,7 @@ public class View extends JPanel
 		}
 		System.out.println("   ");
 		System.out.print("   ");
-		System.out.println("|0||1||2||3||4||5||6||7|");
+		System.out.println("|0||1||2||3||4||5||6||7|");*/
 	}
 	
 	public void updateBoard(Man[][] board)
