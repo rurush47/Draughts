@@ -38,6 +38,24 @@ public class Controller extends MouseAdapter
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
+		
+	}
+    /*
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+     */
+	@Override
+	public void mousePressed(MouseEvent e) {
+		
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
 		
 		//System.out.print(clickPos.x + ",");
@@ -65,25 +83,7 @@ public class Controller extends MouseAdapter
 			return;
 		}
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 	/*
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub

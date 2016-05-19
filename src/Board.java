@@ -1,5 +1,8 @@
 import java.lang.Math;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Board {
 	private enum Player{WHITE, BLACK};
 	public static int BOARDSIZE = 7;
@@ -88,6 +91,7 @@ public class Board {
 			{
 				nextTurn();
 			}
+			winCheck();
 			kingCheck(destination);	
 		}
 		else
@@ -558,5 +562,29 @@ public class Board {
 		{
 			return singleBeatCheck(source);
 		}
+	}
+	
+	private boolean winCheck()
+	{
+		boolean whichColour = true;
+		boolean firstFlag = true;
+		
+		for (int i = 0; i <= BOARDSIZE; i++)
+			for (int j = 0; j <= BOARDSIZE; j++)
+			{
+				if (board[i][j] != null)
+				{
+					if (firstFlag)
+					{
+						whichColour = board[i][j].isWhite();
+						firstFlag = false;
+					}
+					if(board[i][j].isWhite() != whichColour)
+					{
+						return false;
+					}
+				}
+			}
+		return true;
 	}
 }
