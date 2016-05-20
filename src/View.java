@@ -3,6 +3,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -107,43 +109,14 @@ public class View extends JPanel
 		}
 	}
 	
-	public void printBoard(Man[][] board)
-	{	
-		/*for(int j = 7; j >= 0; j--)
-		{
-			System.out.print(j + "  ");
-			for(int i = 0; i < board.length; i++)
-			{
-				if(board[i][j] != null)
-				{
-					if (board[i][j].isWhite())
-					{
-						System.out.print("[o]");						
-					}
-					else
-					{
-						System.out.print("[x]");	
-					}
-				}
-				else
-				{
-					System.out.print("[ ]");
-				}
-				if (i == 7)
-				{
-					System.out.println("");
-				}
-			}
-		}
-		System.out.println("   ");
-		System.out.print("   ");
-		System.out.println("|0||1||2||3||4||5||6||7|");*/
+	public void gameOver()
+	{
+		JOptionPane.showMessageDialog(new JFrame(), "Good game, well played.");
 	}
 	
 	public void updateBoard(Man[][] board)
 	{
 		this.board = board;
-		printBoard(board);
 		repaint();
 	}
 

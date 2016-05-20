@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 
 public class Controller extends MouseAdapter
 {
+	enum Mode{LOCAL, ONLINE};
 	enum State{SELECT, MOVE};
 	
 	private Board model;
@@ -17,11 +18,6 @@ public class Controller extends MouseAdapter
 		this.view = view;
 	}
 	
-	public void printBoard()
-	{
-		view.printBoard(model.getBoard());
-	}
-	
 	public void moveMan(Vector2 source, Vector2 destination)
 	{
 		model.moveMan(source, destination);
@@ -32,30 +28,9 @@ public class Controller extends MouseAdapter
 		view.updateBoard(model.getBoard());
 	}
 	
-
-
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		
-		
-	}
-    /*
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-     */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+		boolean gameOver = false;
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
 		
 		//System.out.print(clickPos.x + ",");
@@ -77,17 +52,12 @@ public class Controller extends MouseAdapter
 		}
 		else if (state == State.MOVE)
 		{
-			model.moveMan(selectedManPos, clickPos);
+			gameOver = model.moveMan(selectedManPos, clickPos);
 			view.updateBoard(model.getBoard());
+			if(gameOver)
+				view.gameOver();
 			state = State.SELECT;
 			return;
 		}
 	}
-	/*
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	*/
 }

@@ -28,8 +28,6 @@ public class Draughts
 		cards.add(menuObj.getMenu(), MENU);
 		cards.add(view, GAME);
 		
-		controller.printBoard();
-		
 		//start a window
 		JFrame frame = new JFrame();
         

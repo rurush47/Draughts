@@ -1,8 +1,5 @@
 import java.lang.Math;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 public class Board {
 	private enum Player{WHITE, BLACK};
 	public static int BOARDSIZE = 7;
@@ -12,7 +9,7 @@ public class Board {
 	private boolean beat = false;
 	private boolean doubleBeat = false;
 	private Vector2 doubleBeatPos;
-	private boolean test = false;
+	private boolean test = true;
 	
 	public Board()
 	{
@@ -65,7 +62,7 @@ public class Board {
 		return board;
 	}
 	
-	public void moveMan(Vector2 source, Vector2 destination)
+	public boolean moveMan(Vector2 source, Vector2 destination)
 	{
 		if(canManMove(source, destination))
 		{
@@ -91,7 +88,8 @@ public class Board {
 			{
 				nextTurn();
 			}
-			winCheck();
+			if(winCheck())
+				return true;
 			kingCheck(destination);	
 		}
 		else
@@ -99,6 +97,7 @@ public class Board {
 			deselectMan();
 			System.out.println("Can't do it m8");
 		}
+		return false;
 	}
 	
 	private boolean canManMove(Vector2 source, Vector2 destination)
