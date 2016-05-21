@@ -1,5 +1,7 @@
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.ServerSocket;
 
 
 public class Controller extends MouseAdapter
@@ -11,6 +13,11 @@ public class Controller extends MouseAdapter
 	private View view;
 	private State state = State.SELECT;
 	private Vector2 selectedManPos;
+	private Player whitePlayer;
+	private Player blackPlayer;
+	private Client client;
+	private ServerSocket serverSocket;
+	
 	
 	public Controller(Board model, View view)
 	{
@@ -18,9 +25,9 @@ public class Controller extends MouseAdapter
 		this.view = view;
 	}
 	
-	public void moveMan(Vector2 source, Vector2 destination)
+	public synchronized boolean moveMan(Vector2 source, Vector2 destination)
 	{
-		model.moveMan(source, destination);
+		return model.moveMan(source, destination);
 	}
 	
 	public void updateView()
@@ -52,12 +59,29 @@ public class Controller extends MouseAdapter
 		}
 		else if (state == State.MOVE)
 		{
-			gameOver = model.moveMan(selectedManPos, clickPos);
+			moveMan(selectedManPos, clickPos);
 			view.updateBoard(model.getBoard());
-			if(gameOver)
-				view.gameOver();
 			state = State.SELECT;
 			return;
 		}
+	}
+	
+	public Man[][] getBoard()
+	{
+		return model.getBoard();
+	}
+
+	public void startNewServer() throws IOException {
+		serverSocket = new ServerSocket(6066);
+		
+		whitePlayer = new Player(serverSocket.accept(), Board.Colour.WHITE, this);
+		blackPlayer = new Player(serverSocket.accept(), Board.Colour.BLACK, this);
+		
+		whitePlayer.start();
+		blackPlayer.start();
+	}
+
+	public void startNewClient() throws Exception {
+		client = new Client("localhost");
 	}
 }

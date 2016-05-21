@@ -12,9 +12,11 @@ public class Menu {
 	private Button quitButton;
 	private Button hostButton;
 	private Button joinButton;
+	private Controller controller;
 	
-	Menu(JPanel cards)
+	Menu(JPanel cards, Controller controller)
 	{
+		this.controller = controller;
 		menu = new JPanel();
 		playButton = new Button("Play local game");
 		quitButton = new Button("Quit");
@@ -43,20 +45,11 @@ public class Menu {
 		{
 			public void actionPerformed(ActionEvent evt) 
 			  {
-				if (Server.available(6066))
-				{
-					try
-				      {
-				         Thread t = new Server(6066);
-				         t.start();
-				      }catch(IOException e)
-				      {
-				         e.printStackTrace();
-				      }
-				}
-				else
-				{
-					System.out.println("Port unavalible");
+				try {
+					controller.startNewServer();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			  } 
 	    });
@@ -65,12 +58,10 @@ public class Menu {
 		{
 			public void actionPerformed(ActionEvent evt) 
 			  {
-				try 
-				{
-					Client.ClientConnect("localhost", 6066);
-				} 
-				catch (ClassNotFoundException e) 
-				{
+				try {
+					controller.startNewClient();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			  }

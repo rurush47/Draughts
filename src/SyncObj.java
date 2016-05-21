@@ -6,6 +6,13 @@ public class SyncObj implements Serializable{
 	private Man[][] board;
 	private boolean gameOver;
 	private String test;
+	private Vector2 source;
+	private Vector2 destination;
+	
+	SyncObj(String text)
+	{
+		this.test = text;
+	}
 	
 	SyncObj(Man[][] board, boolean gameOver)
 	{
@@ -18,6 +25,12 @@ public class SyncObj implements Serializable{
 		this.board = board;
 		this.gameOver = gameOver;
 		this.test = text;
+	}
+	
+	SyncObj(Vector2 source, Vector2 destination)
+	{
+		this.source = source;
+		this.destination = destination;
 	}
 	
 	public String getText()
@@ -33,5 +46,15 @@ public class SyncObj implements Serializable{
 	public boolean getGameStatus()
 	{
 		return gameOver;
+	}
+	
+	public Vector2 getSourceVector()
+	{
+		return source;
+	}
+	
+	public Vector2 getDestinationVector()
+	{
+		return destination;
 	}
 }

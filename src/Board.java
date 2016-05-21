@@ -1,11 +1,11 @@
 import java.lang.Math;
 
 public class Board {
-	private enum Player{WHITE, BLACK};
+	public static enum Colour{WHITE, BLACK};
 	public static int BOARDSIZE = 7;
 	private Man[][] board = new Man[BOARDSIZE + 1][BOARDSIZE + 1];
 	private Man selected;
-	private Player currentPlayer;
+	private Colour currentPlayer;
 	private boolean beat = false;
 	private boolean doubleBeat = false;
 	private Vector2 doubleBeatPos;
@@ -54,7 +54,7 @@ public class Board {
 				}
 		}
 		
-		currentPlayer = Player.WHITE;
+		currentPlayer = Colour.WHITE;
 	}
 	
 	public Man[][] getBoard()
@@ -88,16 +88,16 @@ public class Board {
 			{
 				nextTurn();
 			}
-			if(winCheck())
-				return true;
 			kingCheck(destination);	
+			return true;
 		}
 		else
 		{
 			deselectMan();
 			System.out.println("Can't do it m8");
+			return false;
 		}
-		return false;
+		
 	}
 	
 	private boolean canManMove(Vector2 source, Vector2 destination)
@@ -203,20 +203,20 @@ public class Board {
 	
 	private void nextTurn()
 	{
-		if(currentPlayer == Player.WHITE)
+		if(currentPlayer == Colour.WHITE)
 		{
-			currentPlayer = Player.BLACK;
+			currentPlayer = Colour.BLACK;
 		}
 		else
 		{
-			currentPlayer = Player.WHITE;
+			currentPlayer = Colour.WHITE;
 		}
 	}
 	
 	private boolean turnCheck(Man currentMan)
 	{
-		if(currentMan.isWhite() && currentPlayer == Player.WHITE ||
-				!currentMan.isWhite() && currentPlayer == Player.BLACK)
+		if(currentMan.isWhite() && currentPlayer == Colour.WHITE ||
+				!currentMan.isWhite() && currentPlayer == Colour.BLACK)
 		{
 			return true;
 		}
@@ -281,7 +281,7 @@ public class Board {
 				
 				if(currentMan != null)
 				{
-					if(currentPlayer == Player.WHITE)
+					if(currentPlayer == Colour.WHITE)
 					{
 						if(currentMan.isWhite())
 						{
