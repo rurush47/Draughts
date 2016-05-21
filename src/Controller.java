@@ -16,7 +16,7 @@ public class Controller extends MouseAdapter
 	private Player whitePlayer;
 	private Player blackPlayer;
 	private Client client;
-	private ServerSocket serverSocket;
+	private ServerThread serverSocket;
 	
 	
 	public Controller(Board model, View view)
@@ -72,16 +72,13 @@ public class Controller extends MouseAdapter
 	}
 
 	public void startNewServer() throws IOException {
-		serverSocket = new ServerSocket(6066);
-		
-		whitePlayer = new Player(serverSocket.accept(), Board.Colour.WHITE, this);
-		blackPlayer = new Player(serverSocket.accept(), Board.Colour.BLACK, this);
-		
-		whitePlayer.start();
-		blackPlayer.start();
+		Thread t = new ServerThread(6066, this);
+		t.start();
 	}
 
 	public void startNewClient() throws Exception {
-		client = new Client("localhost");
+		Thread t = new Client("localhost");
+		System.out.println("Client created");
+		t.start();
 	}
 }

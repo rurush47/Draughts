@@ -23,7 +23,7 @@ public class Draughts
 		//card view
 		cards = new JPanel(new CardLayout());
 		
-		Menu menuObj = new Menu(cards);
+		Menu menuObj = new Menu(cards, controller);
 		
 		cards.add(menuObj.getMenu(), MENU);
 		cards.add(view, GAME);

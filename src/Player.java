@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -15,12 +17,16 @@ public class Player extends Thread
 	public Player(Socket socket, Board.Colour colour, Controller controller)
 	{
 		this.socket = socket;
+		System.out.println("Client connected " + socket.getLocalPort());
 		this.colour = colour;
 		this.controller = controller;
 		try
 		{
 			input = new ObjectInputStream(socket.getInputStream());
+			System.out.println("Server got input");
+			
 			output = new ObjectOutputStream(socket.getOutputStream());
+			System.out.println("Server got output");
 			
 			SyncObj welcomeMessage;
 			
@@ -71,6 +77,8 @@ public class Player extends Thread
 		catch (Exception e) 
 		{
             System.out.println("Player died: " + e);
-		} 
+		} finally {
+	        try {socket.close();} catch (IOException e) {}
+	    }
 	}
 }

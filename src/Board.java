@@ -9,7 +9,7 @@ public class Board {
 	private boolean beat = false;
 	private boolean doubleBeat = false;
 	private Vector2 doubleBeatPos;
-	private boolean test = true;
+	private boolean test = false;
 	
 	public Board()
 	{
