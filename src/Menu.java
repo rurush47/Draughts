@@ -1,69 +1,23 @@
 import java.awt.Button;
-import java.awt.CardLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Menu {
 	private JPanel menu;
-	private Button playButton;
-	private Button quitButton;
-	private Button hostButton;
-	private Button joinButton;
+	private JButton playButton;
+	private JButton quitButton;
+	private JButton hostButton;
+	private JButton joinButton;
 	
-	Menu(JPanel cards, Controller controller)
+	Menu(JPanel cards)
 	{
 		menu = new JPanel();
-		playButton = new Button("Play local game");
-		quitButton = new Button("Quit");
-		hostButton = new Button("Host game");
-		joinButton = new Button("Join game");
-		
-		
-		playButton.addActionListener(new ActionListener() 
-		{
-			  public void actionPerformed(ActionEvent evt) 
-			  {
-			    CardLayout cl = (CardLayout)(cards.getLayout());
-			    cl.next(cards);
-			  }
-	    });
-		
-		quitButton.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent evt) 
-			  {
-				System.exit(0);
-			  }
-	    });
-		
-		hostButton.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent evt) 
-			  {
-				try {
-					controller.startNewServer();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			  } 
-	    });
-		
-		joinButton.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent evt) 
-			  {
-				try {
-					controller.startNewClient();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			  }
-	    });
+		playButton = new JButton("Play local game");
+		quitButton = new JButton("Quit");
+		hostButton = new JButton("Host game");
+		joinButton = new JButton("Join game");
+		System.out.println("buttons initialized");
 		
 		menu.add(playButton);
 		menu.add(hostButton);
@@ -74,5 +28,25 @@ public class Menu {
 	public JPanel getMenu()
 	{
 		return menu;
+	}
+	
+	public JButton getQuit()
+	{
+		return quitButton;
+	}
+	
+	public JButton getPlayButton()
+	{
+		return playButton;
+	}
+	
+	public JButton getHostButton()
+	{
+		return hostButton;
+	}
+	
+	public JButton getJoinButton()
+	{
+		return joinButton;
 	}
 }
