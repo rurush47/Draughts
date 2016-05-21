@@ -21,6 +21,7 @@ public class View extends JPanel
 	BufferedImage manSelected;
 	Man[][] board;
 	JPanel view;
+	Menu menu;
 
 	
 	

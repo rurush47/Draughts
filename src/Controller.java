@@ -13,11 +13,7 @@ public class Controller extends MouseAdapter
 	private View view;
 	private State state = State.SELECT;
 	private Vector2 selectedManPos;
-	private Player whitePlayer;
-	private Player blackPlayer;
-	private Client client;
-	private ServerThread serverSocket;
-	
+	private Menu menu;
 	
 	public Controller(Board model, View view)
 	{
@@ -80,5 +76,10 @@ public class Controller extends MouseAdapter
 		Thread t = new Client("localhost");
 		System.out.println("Client created");
 		t.start();
+	}
+	
+	public Menu getMenu()
+	{
+		return menu;
 	}
 }

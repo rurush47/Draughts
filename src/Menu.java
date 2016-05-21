@@ -12,11 +12,9 @@ public class Menu {
 	private Button quitButton;
 	private Button hostButton;
 	private Button joinButton;
-	private Controller controller;
 	
 	Menu(JPanel cards, Controller controller)
 	{
-		this.controller = controller;
 		menu = new JPanel();
 		playButton = new Button("Play local game");
 		quitButton = new Button("Quit");
