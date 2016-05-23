@@ -1,6 +1,11 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * Online client class
+ * @author Rurarz
+ *
+ */
 public class Client extends Thread
 {
 	private int portNumber = 6066;
@@ -9,6 +14,12 @@ public class Client extends Thread
 	private ObjectOutputStream output = null;
 	private Controller controller;
 	
+	/**
+	 * Client constructor.
+	 * @param serverName server address
+	 * @param controller reference to a controller
+	 * @throws Exception
+	 */
 	public Client(String serverName, Controller controller) throws Exception
 	{
 		this.controller = controller;
@@ -23,6 +34,9 @@ public class Client extends Thread
 		System.out.println("Client input created");
 	}
 	
+	/**
+	 * Runs a client thread.
+	 */
 	public void run()
 	{
 		SyncObj response;
@@ -74,6 +88,11 @@ public class Client extends Thread
 		}
 	}
 	
+	/**
+	 * Sends message to server.
+	 * @param clickPos position of a click
+	 * @throws Exception
+	 */
 	public void sendMessage(Vector2 clickPos) throws Exception
 	{
 		SyncObj message = new SyncObj(clickPos);

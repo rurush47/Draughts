@@ -1,5 +1,10 @@
 import java.io.Serializable;
 
+/**
+ * Class representing position of an object on board.
+ * @author Rurarz
+ *
+ */
 public class Vector2 implements Serializable
 {
 	/**
@@ -9,6 +14,9 @@ public class Vector2 implements Serializable
 	public int x;	
 	public int y;
 	
+	/*
+	 * Vector2 constructor
+	 */
 	Vector2(int x, int y)
 	{
 		this.x = x;

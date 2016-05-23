@@ -1,5 +1,10 @@
 import java.lang.Math;
 
+/*
+ * Class representing board with men.
+ * 
+ *
+ */
 public class Board {
 	public static enum Colour{WHITE, BLACK};
 	public static int BOARDSIZE = 7;
@@ -11,6 +16,9 @@ public class Board {
 	private Vector2 doubleBeatPos;
 	private boolean test = false;
 	
+	/*
+	 * Board constructor. Fills the board with men.
+	 */
 	public Board()
 	{
 		if (test)
@@ -54,11 +62,22 @@ public class Board {
 		currentPlayer = Colour.WHITE;
 	}
 	
+	/**
+	 * Returns current board with men.
+	 * @return current board with men.
+	 */
 	public Man[][] getBoard()
 	{
 		return board;
 	}
 	
+	/**
+	 * Moves man if possible. Online case.
+	 * @param source source position of men
+	 * @param destination designated position of men
+	 * @param playerCol colour of man moved
+	 * @return
+	 */
 	public String moveMan(Vector2 source, Vector2 destination, Colour playerCol)
 	{
 		if(playerCol == currentPlayer)
@@ -69,6 +88,12 @@ public class Board {
 			return null;
 	}
 	
+	/**
+	 * Moves man if possible.
+	 * @param source source position of men
+	 * @param destination designated position of men
+	 * @return
+	 */
 	public String moveMan(Vector2 source, Vector2 destination)
 	{
 		if(canManMove(source, destination))
@@ -106,6 +131,12 @@ public class Board {
 		return null;
 	}
 	
+	/**
+	 * Checks if man can move to designated position. 
+	 * @param source source position of men
+	 * @param destination designated position of men
+	 * @return whether man can move or not
+	 */
 	private boolean canManMove(Vector2 source, Vector2 destination)
 	{
 		Man sourceMan = board[source.x][source.y];
@@ -150,6 +181,12 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Checks if king can move to designated position. 
+	 * @param source source position of men
+	 * @param destination designated position of men
+	 * @return whether king can move or not
+	 */
 	private boolean kingMoveCheck(Vector2 source, Vector2 destination)
 	{
 		if (doubleBeat)
@@ -182,6 +219,12 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Checks if there is man on the click position. Online version.
+	 * @param source source position of click
+	 * @param playerCol colour of calling player
+	 * @return whether there is man on the click position
+	 */
 	public boolean isMan(Vector2 source, Colour playerCol)
 	{
 		if(playerCol == currentPlayer)
@@ -192,6 +235,11 @@ public class Board {
 			return false;
 	}
 	
+	/**
+	 * Checks if there is man on the click position.
+	 * @param source source position of click
+	 * @return whether there is man on the click position
+	 */
 	public boolean isMan(Vector2 source)
 	{
 		Man pointedMan = board[source.x][source.y];
@@ -209,6 +257,9 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Deselects man.
+	 */
 	private void deselectMan()
 	{
 		if(selected != null)
@@ -217,6 +268,9 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Simply changes game state to next turn.
+	 */
 	private void nextTurn()
 	{
 		if(currentPlayer == Colour.WHITE)
@@ -229,6 +283,11 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks if man can be moved in this turn (correct colour)
+	 * @param currentMan man that wants to move this turn
+	 * @return whether calling player is allowed to move this turn.
+	 */
 	private boolean turnCheck(Man currentMan)
 	{
 		if(currentMan.isWhite() && currentPlayer == Colour.WHITE ||
@@ -242,6 +301,12 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks if destination of move is valid
+	 * @param source man that wants to move this turn source position
+	 * @param destination move destination
+	 * @return whether man can move
+	 */
 	private boolean destinationCheck(Vector2 source, Vector2 destination)
 	{
 		if (board[source.x][source.y] == null)
@@ -285,6 +350,10 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks if there is a possible beat somewhere on map
+	 * @return whether a beat is possible
+	 */
 	private boolean beatCheck()
 	{
 		Man currentMan;
@@ -331,6 +400,11 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Checks if there is a beat possible for a man on current position
+	 * @param source position of man
+	 * @return whether a man can perform a beat
+	 */
 	private boolean singleBeatCheck(Vector2 source)
 	{	
 		if (board[source.x][source.y] == null)
@@ -361,6 +435,12 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Checks if beat destination is correct
+	 * @param source source position
+	 * @param destination position
+	 * @return whether beat move is valid
+	 */
 	private boolean beatCheckDestination(Vector2 source, Vector2 destination)
 	{
 		if (board[source.x][source.y] == null)
@@ -392,6 +472,11 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Removes men which was beaten.
+	 * @param source start position of beat
+	 * @param destination finish position of beat
+	 */
 	private void beat(Vector2 source, Vector2 destination)
 	{
 		int k = (int) Math.signum(destination.x - source.x);
@@ -409,6 +494,10 @@ public class Board {
 		beat = false;
 	}
 	
+	/**
+	 * Checks if a man can turn into a king.
+	 * @param destination destination of a move
+	 */
 	private void kingCheck(Vector2 destination)
 	{
 		Man destinationMan = board[destination.x][destination.y];
@@ -427,6 +516,11 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks if there is a beat possible for a king on current position
+	 * @param source position of man
+	 * @return whether a king can perform a beat
+	 */
 	private boolean singleBeatKingCheck(Vector2 source)
 	{
 		if (board[source.x][source.y] == null)
@@ -482,6 +576,12 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Checks if beat destination is correct
+	 * @param source source position
+	 * @param destination position
+	 * @return whether beat move is valid
+	 */
 	private boolean kingBeatCheckDestination(Vector2 source, Vector2 destination)
 	{
 		boolean white = board[source.x][source.y].isWhite();
@@ -526,6 +626,13 @@ public class Board {
 		return false;
 	}
 	
+
+	/**
+	 * Checks if destination of move is valid
+	 * @param source man that wants to move this turn source position
+	 * @param destination move destination
+	 * @return whether a king can move
+	 */
 	private boolean kingDestinationCheck(Vector2 source, Vector2 destination)
 	{
 		int k = (int) Math.signum(destination.x - source.x);
@@ -552,6 +659,12 @@ public class Board {
 		return false;
 	}
 	
+	/**
+	 * Checks whether double beat is possible.
+	 * @param source source position of a man/king that just beated
+	 * @param destination destination of a beat
+	 * @return whether a man/king can double beat
+	 */
 	private boolean doubleBeat(Vector2 source, Vector2 destination)
 	{
 		if(!(source.x == doubleBeatPos.x && source.y == doubleBeatPos.y))
@@ -567,6 +680,11 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks if there is a double beat possible for man/king on current position.
+	 * @param source position of a man/king that just beated
+	 * @return whether there is a double beat possible 
+	 */
 	private boolean doubleBeatCheck(Vector2 source)
 	{
 		if(board[source.x][source.y].isKing())
@@ -579,6 +697,10 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks if the game ended.
+	 * @return string describing which player won
+	 */
 	private String winCheck()
 	{
 		boolean whichColour = true;

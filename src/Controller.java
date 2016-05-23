@@ -7,6 +7,11 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 
+/**
+ * Controller class. Handles all sorts of input and updates model and view.
+ * @author Rurarz
+ *
+ */
 public class Controller extends MouseAdapter
 {
 	enum Mode{LOCAL, ONLINE};
@@ -25,7 +30,11 @@ public class Controller extends MouseAdapter
 	private Client client;
 	private ServerThread server;
 	
-	
+	/**
+	 * Controller constructor.
+	 * @param model board reference 
+	 * @param view view reference
+	 */
 	public Controller(Board model, View view)
 	{
 		this.model = model;
@@ -39,26 +48,49 @@ public class Controller extends MouseAdapter
         view.addMouseListener(this);
 	}
 	
+	/**
+	 * Sends a move to board to handle.
+	 * @param source source click position
+	 * @param destination destination position
+	 * @return whether game is over
+	 */
 	public String moveMan(Vector2 source, Vector2 destination)
 	{
 		return model.moveMan(source, destination);
 	}
 	
+	/**
+	 * Sends a move to board to handle. Online version passing calling player colour.
+	 * @param source source click position
+	 * @param destination destination position
+	 * @param playerCol calling player colour
+	 * @return whether game is over
+	 */
 	public String moveMan(Vector2 source, Vector2 destination, Board.Colour playerCol)
 	{
 		return model.moveMan(source, destination, playerCol);
 	}
 	
+	/**
+	 * Calls update method in the view.
+	 */
 	public void updateView()
 	{
 		view.updateBoard(model.getBoard());
 	}
 	
+	/**
+	 * Calls update method in the view.
+	 * @param board board to display in view.
+	 */
 	public void updateView(Man[][] board)
 	{
 		view.updateBoard(board);
 	}
 	
+	/**
+	 * Listens on a mouse click and calls a mouse click handle.
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
@@ -76,6 +108,10 @@ public class Controller extends MouseAdapter
 		}
 	}
 	
+	/**
+	 * Handles a received mouse click
+	 * @param clickPos position of a mouse click
+	 */
 	public synchronized void mousePressHandle(Vector2 clickPos)
 	{
 		if(gameMode == Mode.LOCAL)
@@ -108,6 +144,11 @@ public class Controller extends MouseAdapter
 		}
 	}
 	
+	/**
+	 * Handles a mouse click received from online client.
+	 * @param clickPos position of a mouse click
+	 * @param playerCol calling player colour
+	 */
 	public void moveHandle(Vector2 clickPos, Board.Colour playerCol) throws IOException
 	{
 		if(gameMode == Mode.ONLINE)
@@ -146,17 +187,29 @@ public class Controller extends MouseAdapter
 		}
 	}
 	
+	/**
+	 * Returns current board of men.
+	 * @return current board of men
+	 */
 	public Man[][] getBoard()
 	{
 		return model.getBoard();
 	}
 
+	/**
+	 * Starts new server thread.
+	 * @throws IOException
+	 */
 	public void startNewServer() throws IOException {
 		server = new ServerThread(6066, this);
 		Thread t = server;
 		t.start();
 	}
-
+	
+	/**
+	 * Starts new client thread.
+	 * @throws Exception
+	 */
 	public void startNewClient() throws Exception {
 		client = new Client("localhost", this);
 		Thread t = client;
@@ -164,12 +217,21 @@ public class Controller extends MouseAdapter
 		t.start();
 	}
 	
+	/**
+	 * Calls broadcast method in a server thread
+	 * @param board current board of men
+	 * @param gameStatus status of a game. null if normal
+	 * @throws IOException
+	 */
 	private synchronized void broadcastView(Man[][] board, String gameStatus) throws IOException
 	{
 		SyncObj message = new SyncObj(board, gameStatus);
 		server.broadcastMessage(message);
 	}
 	
+	/**
+	 * Initialise buttons' actions
+	 */
 	private void menuButtonsInit()
 	{
 		playButton.addActionListener(new ActionListener() 
@@ -231,14 +293,20 @@ public class Controller extends MouseAdapter
 	    });
 	}
 	
+	/**
+	 * Calls win game handle in view
+	 * @param player string containing colour of a player who won the game.
+	 */
 	public void showWinMessage(String player)
 	{
 		view.showWinMessage(player);
 	}
 	
+	/*
+	 * Calls disconnected player handle in view
+	 */
 	public void handlePlayerDisconnnect()
 	{
 		view.showDisconnectedMessage();
 	}
-	
 }

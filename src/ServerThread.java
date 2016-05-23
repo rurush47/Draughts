@@ -1,6 +1,11 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * Server thread class.
+ * @author Rurarz
+ *
+ */
 public class ServerThread extends Thread
 {
 	private ServerSocket server;
@@ -8,17 +13,30 @@ public class ServerThread extends Thread
 	Player blackPlayer;
 	Controller controller;
 	
+	/**
+	 * Server thread constructor
+	 * @param port port on which server is hosted 
+	 * @param controller controller reference 
+	 * @throws IOException
+	 */
 	public ServerThread(int port, Controller controller) throws IOException
 	{
 		server = new ServerSocket(port);
 		this.controller = controller;
 	}
 	
+	/**
+	 * Returns a server reference.
+	 * @return server reference
+	 */
 	public ServerSocket getServerThread()
 	{
 		return server;
 	}
 	
+	/**
+	 * Runs a server thread.
+	 */
 	public void run()
 	{
 		try {
@@ -44,6 +62,12 @@ public class ServerThread extends Thread
         }
 	}
 	
+	/**
+	 * Handles move message from client
+	 * @param move click position to handle 
+	 * @param playerCol colour of calling player
+	 * @throws IOException
+	 */
 	public void handleMove(Vector2 move, Board.Colour playerCol) throws IOException
 	{
 		if(move != null)
@@ -56,11 +80,18 @@ public class ServerThread extends Thread
 		}
 	}
 	
+	/*
+	 * Handles player disconnect situation.
+	 */
 	public void handlePlayerDisconnect()
 	{
 		controller.handlePlayerDisconnnect();
 	}
-	
+	/**
+	 * Sends a message to all clients.
+	 * @param message message to broadcast
+	 * @throws IOException
+	 */
 	public synchronized void broadcastMessage(SyncObj message) throws IOException
 	{
 		whitePlayer.sendMessageToClient(message);

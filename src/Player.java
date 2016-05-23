@@ -3,6 +3,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * Class representing server connection with a client.
+ * @author Rurarz
+ *
+ */
 public class Player extends Thread
 {
 	private Board.Colour colour;
@@ -11,7 +16,14 @@ public class Player extends Thread
 	private ObjectOutputStream output;
 	private ServerThread server;
 	private boolean keepListening = true;
-	
+
+	/**
+	 * Player constructor
+	 * @param socket socket with a client
+	 * @param colour colour of a player
+	 * @param controller controller reference
+	 * @param server server thread reference
+	 */
 	public Player(Socket socket, Board.Colour colour, Controller controller, ServerThread server)
 	{
 		this.server = server;
@@ -43,7 +55,10 @@ public class Player extends Thread
 			System.out.println("Exception:" + e);
 		}
 	}
-	
+
+	/**
+	 * Runs player thread.
+	 */
 	public void run()
 	{
 		try
@@ -73,6 +88,11 @@ public class Player extends Thread
 	    }
 	}
 	
+	/**
+	 * Sends message to client.
+	 * @param message message to send
+	 * @throws IOException
+	 */
 	public synchronized void sendMessageToClient(SyncObj message) throws IOException
 	{
 		output.writeObject(message);

@@ -9,7 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
+/**
+ * Displays game screen.
+ * @author Rurarz
+ *
+ */
 public class View extends JPanel
 {
 	public static int IMAGESIZE = 64;
@@ -27,7 +31,9 @@ public class View extends JPanel
 	final String MENU = "Card with Menu";
 	final String GAME = "Card with Game";
 	
-	
+	/*
+	 * View constructor.
+	 */
 	View()
 	{
 		loadImages();
@@ -51,6 +57,9 @@ public class View extends JPanel
         frame.pack();
 	}
 	
+	/**
+	 * Loads images from files.
+	 */
 	private void loadImages()
 	{
 		try
@@ -67,6 +76,9 @@ public class View extends JPanel
 		}
 	}
 	
+	/**
+	 * Draws a board onscreen.
+	 */
 	@Override 
 	public void paintComponent(Graphics g)
     {
@@ -95,6 +107,9 @@ public class View extends JPanel
         drawImagesOnBoard(g);
     }
 	
+	/**
+	 * Draws men onscreen.
+	 */
 	public void drawImagesOnBoard(Graphics g)
 	{
 		for(int j = 7; j >= 0; j--)
@@ -131,6 +146,10 @@ public class View extends JPanel
 		}
 	}
 	
+	/**
+	 * Shows game over message onscreen.
+	 * @param player string containing colour of the player who won.
+	 */
 	public void showWinMessage(String player)
 	{
 		if(player.equals("white_win"))
@@ -144,29 +163,45 @@ public class View extends JPanel
 		returnToMenu();
 	}
 	
+	/**
+	 * Shows player disconnect dialog.
+	 */
 	public void showDisconnectedMessage()
 	{
 		JOptionPane.showMessageDialog(null, "Player disconnected");
 		returnToMenu();
 	}
 	
+	/**
+	 * Shows dialog saying that port is already in use.
+	 */
 	public void portInUseMessage()
 	{
 		JOptionPane.showMessageDialog(null, "Port already in use.");
 		returnToMenu();
 	}
 	
+	/**
+	 * Shows dialog saying that there is no game hosted.
+	 */
 	public void noHostFoundMessage()
 	{
 		JOptionPane.showMessageDialog(null, "No games hosted.");
 	}
 	
+	/**
+	 * Returns to main menu of the game.
+	 */
 	private void returnToMenu()
 	{
 		CardLayout cl = (CardLayout)(getCards().getLayout());
 	    cl.show(getCards(), MENU);
 	}
 	
+	/**
+	 * Repaints the board.
+	 * @param board board to draw
+	 */
 	public synchronized void updateBoard(Man[][] board)
 	{
 		this.board = board;
@@ -174,11 +209,17 @@ public class View extends JPanel
 		System.out.println("View Updated");
 	}
 
+	/*
+	 * Returns menu.
+	 */
 	public Menu getMenu()
 	{
 		return menu;
 	}
 	
+	/*
+	 * Returns views.
+	 */
 	public JPanel getCards()
 	{
 		return cards;

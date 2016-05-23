@@ -1,6 +1,9 @@
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/*
+ * Class that contains maion menu panel with buttons.
+ */
 public class Menu {
 	private JPanel menu;
 	private JButton playButton;
@@ -8,6 +11,9 @@ public class Menu {
 	private JButton hostButton;
 	private JButton joinButton;
 	
+	/*
+	 * Menu constructor
+	 */
 	Menu(JPanel cards)
 	{
 		menu = new JPanel();
@@ -23,26 +29,41 @@ public class Menu {
 		menu.add(quitButton);
 	}
 	
+	/*
+	 * Returns menu object.
+	 */
 	public JPanel getMenu()
 	{
 		return menu;
 	}
 	
+	/*
+	 * Returns quit button.
+	 */
 	public JButton getQuit()
 	{
 		return quitButton;
 	}
 	
+	/*
+	 * Returns play button.
+	 */
 	public JButton getPlayButton()
 	{
 		return playButton;
 	}
 	
+	/*
+	 * Returns host button.
+	 */
 	public JButton getHostButton()
 	{
 		return hostButton;
 	}
 	
+	/*
+	 * Returns join button.
+	 */
 	public JButton getJoinButton()
 	{
 		return joinButton;
