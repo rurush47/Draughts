@@ -8,7 +8,6 @@ public class ServerThread extends Thread
 	Player blackPlayer;
 	Controller controller;
 	
-	
 	public ServerThread(int port, Controller controller) throws IOException
 	{
 		server = new ServerSocket(port);
@@ -57,9 +56,18 @@ public class ServerThread extends Thread
 		}
 	}
 	
+	public void handlePlayerDisconnect()
+	{
+		controller.handlePlayerDisconnnect();
+	}
+	
 	public synchronized void broadcastMessage(SyncObj message) throws IOException
 	{
 		whitePlayer.sendMessageToClient(message);
 		blackPlayer.sendMessageToClient(message);
+		if(message.getText() != null)
+		{
+			server.close();
+		}
 	}
 }

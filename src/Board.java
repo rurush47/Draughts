@@ -9,12 +9,13 @@ public class Board {
 	private boolean beat = false;
 	private boolean doubleBeat = false;
 	private Vector2 doubleBeatPos;
-	private boolean test = true;
+	private boolean test = false;
 	
 	public Board()
 	{
 		if (test)
 		{
+			//test case
 			for(int j = 0; j < board.length; j++)
 				for(int i = 0; i < board.length; i++)
 					board[i][j] = null;

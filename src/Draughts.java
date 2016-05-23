@@ -5,9 +5,9 @@ public class Draughts
 		System.out.println("Hello!");
 		
 		View view = new View();
-		Board model = new Board();
-		Controller controller = new Controller(model, view);
-		controller.updateView();    
+		//model created in controller
+		@SuppressWarnings("unused")
+		Controller controller = new Controller(null, view);
 	}
 }
 

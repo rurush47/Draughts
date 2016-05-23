@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 public class View extends JPanel
 {
 	public static int IMAGESIZE = 64;
-	
 	private static final long serialVersionUID = 1L;
 	Controller controller;
 	BufferedImage whiteManImage;
@@ -25,17 +24,14 @@ public class View extends JPanel
 	JPanel view;
 	Menu menu;
 	JPanel cards;
-
+	final String MENU = "Card with Menu";
+	final String GAME = "Card with Game";
 	
 	
 	View()
 	{
 		loadImages();
 
-		final String MENU = "Card with Menu";
-		final String GAME = "Card with Game";
-		
-		//card view
 		cards = new JPanel(new CardLayout());
 		
 		menu = new Menu(cards);
@@ -67,7 +63,7 @@ public class View extends JPanel
 		}
 		catch (IOException ex)
 		{
-			System.out.println("Error loading sprite.");
+			System.out.println("Error loading sprites.");
 		}
 	}
 	
@@ -145,11 +141,30 @@ public class View extends JPanel
 		{
 			JOptionPane.showMessageDialog(null, "Black player wins");
 		}
+		returnToMenu();
 	}
 	
-	public void gameOver()
+	public void showDisconnectedMessage()
 	{
-		JOptionPane.showMessageDialog(new JFrame(), "Good game, well played.");
+		JOptionPane.showMessageDialog(null, "Player disconnected");
+		returnToMenu();
+	}
+	
+	public void portInUseMessage()
+	{
+		JOptionPane.showMessageDialog(null, "Port already in use.");
+		returnToMenu();
+	}
+	
+	public void noHostFoundMessage()
+	{
+		JOptionPane.showMessageDialog(null, "No games hosted.");
+	}
+	
+	private void returnToMenu()
+	{
+		CardLayout cl = (CardLayout)(getCards().getLayout());
+	    cl.show(getCards(), MENU);
 	}
 	
 	public synchronized void updateBoard(Man[][] board)
@@ -168,4 +183,5 @@ public class View extends JPanel
 	{
 		return cards;
 	}
+	
 }

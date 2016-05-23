@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class Player extends Thread
 {
@@ -11,6 +10,7 @@ public class Player extends Thread
 	private ObjectInputStream input;
 	private ObjectOutputStream output;
 	private ServerThread server;
+	private boolean keepListening = true;
 	
 	public Player(Socket socket, Board.Colour colour, Controller controller, ServerThread server)
 	{
@@ -54,14 +54,14 @@ public class Player extends Thread
 	            System.out.println("MESSAGE White moves first");
 	        }
 			
-			while (true)
+			while (keepListening)
 			{
 				SyncObj receivedMove = (SyncObj)input.readObject();
 				server.handleMove(receivedMove.getSourceVector(), this.colour);
 			}
 		} catch (IOException e) {
 			System.out.println("Player disconnected");
-			//TODO alert
+			server.handlePlayerDisconnect();
 		}
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -77,6 +77,10 @@ public class Player extends Thread
 	{
 		output.writeObject(message);
 		output.reset();
-		System.out.println("Message send");
+		if(message.getText() != null)
+		{
+			keepListening = false;
+			socket.close();
+		}
 	}
 }

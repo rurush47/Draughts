@@ -31,7 +31,7 @@ public class Controller extends MouseAdapter
 		this.model = model;
 		this.view = view;
 		this.menu = view.getMenu();
-		playButton = view.getMenu().getPlayButton();
+		playButton = menu.getPlayButton();
 		quitButton = menu.getQuit();
 		hostButton = menu.getHostButton();
 		joinButton = menu.getJoinButton();
@@ -84,14 +84,14 @@ public class Controller extends MouseAdapter
 			{
 				state = State.MOVE;
 				selectedManPos = clickPos;
-				view.updateBoard(model.getBoard());
+				updateView();
 				return;
 			}
 			//select another your Man
 			if(state == State.MOVE && model.isMan(clickPos))
 			{
 				selectedManPos = clickPos;
-				view.updateBoard(model.getBoard());
+				updateView();
 				return;
 			}
 			else if (state == State.MOVE)
@@ -99,9 +99,9 @@ public class Controller extends MouseAdapter
 				String gameStatus = moveMan(selectedManPos, clickPos);
 				if(gameStatus != null)
 				{
-					System.out.println(gameStatus);
+					view.showWinMessage(gameStatus);
 				}
-				view.updateBoard(model.getBoard());
+				updateView();
 				state = State.SELECT;
 				return;
 			}
@@ -177,6 +177,10 @@ public class Controller extends MouseAdapter
 			  public void actionPerformed(ActionEvent evt) 
 			  {
 				gameMode = Mode.LOCAL;
+				//create new board and update view
+				model = new Board();
+				updateView();
+				//
 			    CardLayout cl = (CardLayout)(view.getCards().getLayout());
 			    cl.next(view.getCards());
 			  }
@@ -196,10 +200,13 @@ public class Controller extends MouseAdapter
 			  {
 				try {
 					gameMode = Mode.ONLINE;
+					//create new board and update view
+					model = new Board();
+					updateView();
+					//
 					startNewServer();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					view.portInUseMessage();
 				}
 			  } 
 	    });
@@ -210,12 +217,15 @@ public class Controller extends MouseAdapter
 			  {
 				try {
 				    gameMode = Mode.ONLINE;
+				    //just to update view
+				    model = new Board();
+					updateView();
+					//
 					startNewClient();
 					CardLayout cl = (CardLayout)(view.getCards().getLayout());
 				    cl.next(view.getCards());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					view.noHostFoundMessage();
 				}
 			  }
 	    });
@@ -224,6 +234,11 @@ public class Controller extends MouseAdapter
 	public void showWinMessage(String player)
 	{
 		view.showWinMessage(player);
+	}
+	
+	public void handlePlayerDisconnnect()
+	{
+		view.showDisconnectedMessage();
 	}
 	
 }

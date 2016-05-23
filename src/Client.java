@@ -52,6 +52,8 @@ public class Client extends Thread
 				{
 					controller.updateView(response.getBoard());
 					controller.showWinMessage(response.getGameStatus());
+					//socket.close();
+					break;
 				}
 			}
 		} catch (ClassNotFoundException e) {
