@@ -135,15 +135,28 @@ public class View extends JPanel
 		}
 	}
 	
+	public void showWinMessage(String player)
+	{
+		if(player.equals("white_win"))
+		{
+			JOptionPane.showMessageDialog(null, "White player wins");
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Black player wins");
+		}
+	}
+	
 	public void gameOver()
 	{
 		JOptionPane.showMessageDialog(new JFrame(), "Good game, well played.");
 	}
 	
-	public void updateBoard(Man[][] board)
+	public synchronized void updateBoard(Man[][] board)
 	{
 		this.board = board;
 		repaint();
+		System.out.println("View Updated");
 	}
 
 	public Menu getMenu()

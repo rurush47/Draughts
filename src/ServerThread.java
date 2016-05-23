@@ -12,6 +12,7 @@ public class ServerThread extends Thread
 	public ServerThread(int port, Controller controller) throws IOException
 	{
 		server = new ServerSocket(port);
+		this.controller = controller;
 	}
 	
 	public ServerSocket getServerThread()
@@ -22,14 +23,15 @@ public class ServerThread extends Thread
 	public void run()
 	{
 		try {
-            while (true) {
+            //while (true) {
             	System.out.println("waiting for connection");
-            	whitePlayer = new Player(server.accept(), Board.Colour.WHITE, controller);
-        		blackPlayer = new Player(server.accept(), Board.Colour.BLACK, controller);
+            	whitePlayer = new Player(server.accept(), Board.Colour.WHITE, controller, this);
+        		blackPlayer = new Player(server.accept(), Board.Colour.BLACK, controller, this);
         		
         		whitePlayer.start();
         		blackPlayer.start();
-            }
+        		System.out.println("Both players started");
+            //}
         } catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,5 +43,23 @@ public class ServerThread extends Thread
 				e.printStackTrace();
 			}
         }
+	}
+	
+	public void handleMove(Vector2 move, Board.Colour playerCol) throws IOException
+	{
+		if(move != null)
+		{
+			controller.moveHandle(move, playerCol);	
+		}
+		else
+		{
+			System.out.println("null message");
+		}
+	}
+	
+	public synchronized void broadcastMessage(SyncObj message) throws IOException
+	{
+		whitePlayer.sendMessageToClient(message);
+		blackPlayer.sendMessageToClient(message);
 	}
 }

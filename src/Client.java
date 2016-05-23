@@ -7,9 +7,11 @@ public class Client extends Thread
 	private Socket socket    = null;
 	private ObjectInputStream  input  =  null;
 	private ObjectOutputStream output = null;
+	private Controller controller;
 	
-	public Client(String serverName) throws Exception
+	public Client(String serverName, Controller controller) throws Exception
 	{
+		this.controller = controller;
 		 System.out.println("Connecting to " + serverName +
 		 " on port " + portNumber);
 		socket = new Socket(serverName, portNumber);
@@ -19,9 +21,6 @@ public class Client extends Thread
 		System.out.println("Client output created");
 		input = new ObjectInputStream(inFromServer);
 		System.out.println("Client input created");
-
-
-		
 	}
 	
 	public void run()
@@ -42,9 +41,18 @@ public class Client extends Thread
 			}
 			while(true)
 			{
-				System.out.println("Waiting for move from another player");
 				response = (SyncObj)input.readObject();
-				//update map etc m8
+				
+				if(response.getGameStatus() == null)
+				{
+					System.out.println("Client: view received");
+					controller.updateView(response.getBoard());
+				}
+				else
+				{
+					controller.updateView(response.getBoard());
+					controller.showWinMessage(response.getGameStatus());
+				}
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -64,9 +72,9 @@ public class Client extends Thread
 		}
 	}
 	
-	public void sendMessage(Vector2 source, Vector2 destination) throws Exception
+	public void sendMessage(Vector2 clickPos) throws Exception
 	{
-		SyncObj message = new SyncObj(source, destination);
+		SyncObj message = new SyncObj(clickPos);
 		output.writeObject(message);
 	}
 }

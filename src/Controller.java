@@ -1,4 +1,3 @@
-import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +21,9 @@ public class Controller extends MouseAdapter
 	private JButton quitButton;
 	private JButton hostButton;
 	private JButton joinButton;
+	private Mode gameMode;
+	private Client client;
+	private ServerThread server;
 	
 	
 	public Controller(Board model, View view)
@@ -37,9 +39,14 @@ public class Controller extends MouseAdapter
         view.addMouseListener(this);
 	}
 	
-	public synchronized boolean moveMan(Vector2 source, Vector2 destination)
+	public String moveMan(Vector2 source, Vector2 destination)
 	{
 		return model.moveMan(source, destination);
+	}
+	
+	public String moveMan(Vector2 source, Vector2 destination, Board.Colour playerCol)
+	{
+		return model.moveMan(source, destination, playerCol);
 	}
 	
 	public void updateView()
@@ -47,34 +54,95 @@ public class Controller extends MouseAdapter
 		view.updateBoard(model.getBoard());
 	}
 	
+	public void updateView(Man[][] board)
+	{
+		view.updateBoard(board);
+	}
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
-		boolean gameOver = false;
 		Vector2 clickPos = new Vector2(e.getX()/64, (512 - e.getY())/64);
-		
-		//System.out.print(clickPos.x + ",");
-		//System.out.println(clickPos.y);
-		
-		if(state == State.SELECT && model.isMan(clickPos))
+		if(gameMode == Mode.LOCAL)
 		{
-			state = State.MOVE;
-			selectedManPos = clickPos;
-			view.updateBoard(model.getBoard());
-			return;
+			mousePressHandle(clickPos);
 		}
-		//select another your Man
-		if(state == State.MOVE && model.isMan(clickPos))
+		else if (gameMode == Mode.ONLINE)
 		{
-			selectedManPos = clickPos;
-			view.updateBoard(model.getBoard());
-			return;
+			try {
+				client.sendMessage(clickPos);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
-		else if (state == State.MOVE)
+	}
+	
+	public synchronized void mousePressHandle(Vector2 clickPos)
+	{
+		if(gameMode == Mode.LOCAL)
 		{
-			moveMan(selectedManPos, clickPos);
-			view.updateBoard(model.getBoard());
-			state = State.SELECT;
-			return;
+			if(state == State.SELECT && model.isMan(clickPos))
+			{
+				state = State.MOVE;
+				selectedManPos = clickPos;
+				view.updateBoard(model.getBoard());
+				return;
+			}
+			//select another your Man
+			if(state == State.MOVE && model.isMan(clickPos))
+			{
+				selectedManPos = clickPos;
+				view.updateBoard(model.getBoard());
+				return;
+			}
+			else if (state == State.MOVE)
+			{
+				String gameStatus = moveMan(selectedManPos, clickPos);
+				if(gameStatus != null)
+				{
+					System.out.println(gameStatus);
+				}
+				view.updateBoard(model.getBoard());
+				state = State.SELECT;
+				return;
+			}
+		}
+	}
+	
+	public void moveHandle(Vector2 clickPos, Board.Colour playerCol) throws IOException
+	{
+		if(gameMode == Mode.ONLINE)
+		{
+			System.out.println("Server: move recived");
+			if(state == State.SELECT && model.isMan(clickPos, playerCol))
+			{
+				state = State.MOVE;
+				selectedManPos = clickPos;
+				System.out.println("Server: man selected");
+				broadcastView(model.getBoard(), null);
+				return;
+			}
+			//select another your Man
+			if(state == State.MOVE && model.isMan(clickPos, playerCol))
+			{
+				selectedManPos = clickPos;
+				System.out.println("Server: another man selected");
+				broadcastView(model.getBoard(), null);
+				return;
+			}
+			else if (state == State.MOVE)
+			{
+				String gameStatus = moveMan(selectedManPos, clickPos, playerCol);
+				if(gameStatus != null)
+				{
+					broadcastView(model.getBoard(), gameStatus);
+				}
+				else
+				{
+					broadcastView(model.getBoard(), null);
+				}
+				state = State.SELECT;
+				return;
+			}
 		}
 	}
 	
@@ -84,14 +152,22 @@ public class Controller extends MouseAdapter
 	}
 
 	public void startNewServer() throws IOException {
-		Thread t = new ServerThread(6066, this);
+		server = new ServerThread(6066, this);
+		Thread t = server;
 		t.start();
 	}
 
 	public void startNewClient() throws Exception {
-		Thread t = new Client("localhost");
+		client = new Client("localhost", this);
+		Thread t = client;
 		System.out.println("Client created");
 		t.start();
+	}
+	
+	private synchronized void broadcastView(Man[][] board, String gameStatus) throws IOException
+	{
+		SyncObj message = new SyncObj(board, gameStatus);
+		server.broadcastMessage(message);
 	}
 	
 	private void menuButtonsInit()
@@ -100,6 +176,7 @@ public class Controller extends MouseAdapter
 		{
 			  public void actionPerformed(ActionEvent evt) 
 			  {
+				gameMode = Mode.LOCAL;
 			    CardLayout cl = (CardLayout)(view.getCards().getLayout());
 			    cl.next(view.getCards());
 			  }
@@ -118,6 +195,7 @@ public class Controller extends MouseAdapter
 			public void actionPerformed(ActionEvent evt) 
 			  {
 				try {
+					gameMode = Mode.ONLINE;
 					startNewServer();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -131,13 +209,21 @@ public class Controller extends MouseAdapter
 			public void actionPerformed(ActionEvent evt) 
 			  {
 				try {
+				    gameMode = Mode.ONLINE;
 					startNewClient();
+					CardLayout cl = (CardLayout)(view.getCards().getLayout());
+				    cl.next(view.getCards());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			  }
 	    });
+	}
+	
+	public void showWinMessage(String player)
+	{
+		view.showWinMessage(player);
 	}
 	
 }

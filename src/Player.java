@@ -2,23 +2,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Player extends Thread
 {
 	private Board.Colour colour;
+	private Socket socket;
+	private ObjectInputStream input;
+	private ObjectOutputStream output;
+	private ServerThread server;
 	
-	Player opponent;
-	Socket socket;
-	ObjectInputStream input;
-	ObjectOutputStream output;
-	Controller controller;
-	
-	public Player(Socket socket, Board.Colour colour, Controller controller)
+	public Player(Socket socket, Board.Colour colour, Controller controller, ServerThread server)
 	{
+		this.server = server;
 		this.socket = socket;
 		System.out.println("Client connected " + socket.getLocalPort());
 		this.colour = colour;
-		this.controller = controller;
 		try
 		{
 			input = new ObjectInputStream(socket.getInputStream());
@@ -45,10 +44,6 @@ public class Player extends Thread
 		}
 	}
 	
-	public void setOpponent(Player opponent) {
-        this.opponent = opponent;
-    }
-	
 	public void run()
 	{
 		try
@@ -62,22 +57,26 @@ public class Player extends Thread
 			while (true)
 			{
 				SyncObj receivedMove = (SyncObj)input.readObject();
-				if (controller.moveMan(receivedMove.getSourceVector(), receivedMove.getDestinationVector()))
-				{
-					SyncObj outMessage = new SyncObj(controller.getBoard(), false);
-					output.writeObject(outMessage);
-				}
-				else
-				{
-					System.out.print("Wrong move");
-				}
+				server.handleMove(receivedMove.getSourceVector(), this.colour);
 			}
+		} catch (IOException e) {
+			System.out.println("Player disconnected");
+			//TODO alert
 		}
-		catch (Exception e) 
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		finally 
 		{
-            System.out.println("Player died: " + e);
-		} finally {
 	        try {socket.close();} catch (IOException e) {}
 	    }
+	}
+	
+	public synchronized void sendMessageToClient(SyncObj message) throws IOException
+	{
+		output.writeObject(message);
+		output.reset();
+		System.out.println("Message send");
 	}
 }

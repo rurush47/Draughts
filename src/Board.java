@@ -9,7 +9,7 @@ public class Board {
 	private boolean beat = false;
 	private boolean doubleBeat = false;
 	private Vector2 doubleBeatPos;
-	private boolean test = false;
+	private boolean test = true;
 	
 	public Board()
 	{
@@ -19,10 +19,6 @@ public class Board {
 				for(int i = 0; i < board.length; i++)
 					board[i][j] = null;
 			
-			board[0][6] = new Man(false);
-			board[1][7] = new Man(false);
-			board[3][7] = new Man(false);
-			board[3][5] = new Man(false);
 			board[5][3] = new Man(false);
 			board[6][2] = new Man(true);
 			//board[2][0] = new Man(false);
@@ -62,7 +58,17 @@ public class Board {
 		return board;
 	}
 	
-	public boolean moveMan(Vector2 source, Vector2 destination)
+	public String moveMan(Vector2 source, Vector2 destination, Colour playerCol)
+	{
+		if(playerCol == currentPlayer)
+		{
+			return moveMan(source, destination);
+		}
+		else
+			return null;
+	}
+	
+	public String moveMan(Vector2 source, Vector2 destination)
 	{
 		if(canManMove(source, destination))
 		{
@@ -88,16 +94,15 @@ public class Board {
 			{
 				nextTurn();
 			}
-			kingCheck(destination);	
-			return true;
+			kingCheck(destination);
+			return winCheck();
 		}
 		else
 		{
 			deselectMan();
 			System.out.println("Can't do it m8");
-			return false;
 		}
-		
+		return null;
 	}
 	
 	private boolean canManMove(Vector2 source, Vector2 destination)
@@ -174,6 +179,16 @@ public class Board {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isMan(Vector2 source, Colour playerCol)
+	{
+		if(playerCol == currentPlayer)
+		{
+			return isMan(source);
+		}
+		else
+			return false;
 	}
 	
 	public boolean isMan(Vector2 source)
@@ -563,7 +578,7 @@ public class Board {
 		}
 	}
 	
-	private boolean winCheck()
+	private String winCheck()
 	{
 		boolean whichColour = true;
 		boolean firstFlag = true;
@@ -580,10 +595,15 @@ public class Board {
 					}
 					if(board[i][j].isWhite() != whichColour)
 					{
-						return false;
+						return null;
 					}
 				}
 			}
-		return true;
+		if(whichColour == true)
+		{
+			return "white_win";
+		}
+		else
+			return "black_win";
 	}
 }
